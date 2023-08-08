@@ -12,6 +12,11 @@ TCPSocket* TCPSocket::Create()
 
 bool TCPSocket::Connect(const char* ip, int port)
 {
+	if(m_Socket != INVALID_SOCKET)
+	{
+		return false;
+	}
+
 	m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (m_Socket == INVALID_SOCKET)
 	{
@@ -62,6 +67,7 @@ bool TCPSocket::Connect(const char* ip, int port)
 
 void TCPSocket::Disconnect()
 {
+
 #ifdef SSL_ENABLED
 	//
 	// I'm not sure if OpenSSL frees these since they have internal ref counts..?
@@ -73,10 +79,15 @@ void TCPSocket::Disconnect()
 		SSL_shutdown(pair.second);
 		SSL_free(pair.second);
 	}
+
 	m_SocketToSSLMap.clear();
+
+	m_CTX = nullptr;
+	m_SSL = nullptr;
 #else
 	closesocket(m_Socket);
 #endif
+	m_Socket = INVALID_SOCKET;
 }
 
 bool TCPSocket::Bind(const char* ip, int port)
