@@ -1,7 +1,8 @@
-//
-// A functional Windows TCP socket class with optional SSL support
-// (C) 2023 _paging
-//
+/*
+* A functional Windows TCP socket class with optional SSL support
+* (C) 2023 _paging
+* All rights reserved, subject to the license terms.
+*/
 #pragma once
 
 #define USE_SSL // Comment this line to disable SSL support
@@ -103,7 +104,7 @@ private:
 template<typename T>
 inline SIZE_T TCPSocket::Send(T data)
 {
-	return SIZE_T();
+	return Send((BYTE*) &data, sizeof(T));
 }
 
 template<typename T>
