@@ -60,6 +60,25 @@ bool TCPSocket::Connect(const char* ip, int port)
 	return true;
 }
 
+void TCPSocket::Disconnect()
+{
+#ifdef SSL_ENABLED
+	//
+	// I'm not sure if OpenSSL frees these since they have internal ref counts..?
+	//
+
+	SSL_CTX_free(m_CTX);
+	for (auto& pair : m_SocketToSSLMap)
+	{
+		SSL_shutdown(pair.second);
+		SSL_free(pair.second);
+	}
+	m_SocketToSSLMap.clear();
+#else
+	closesocket(m_Socket);
+#endif
+}
+
 bool TCPSocket::Bind(const char* ip, int port)
 {
 	m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -139,19 +158,6 @@ SOCKET TCPSocket::Accept()
 	m_SocketToSSLMap[client] = ssl;
 #endif
 	return client;
-}
-
-void TCPSocket::Disconnect()
-{
-#ifdef SSL_ENABLED
-	SSL_shutdown(m_SSL);
-	SSL_free(m_SSL);
-	SSL_CTX_free(m_CTX);
-#else
-	closesocket(m_Socket);
-#endif
-
-	WSACleanup();
 }
 
 SIZE_T TCPSocket::Send(std::string& buffer)
