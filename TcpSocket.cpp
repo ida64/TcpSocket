@@ -67,7 +67,6 @@ bool TCPSocket::Connect(const char* ip, int port)
 
 void TCPSocket::Disconnect()
 {
-
 #ifdef SSL_ENABLED
 	//
 	// I'm not sure if OpenSSL frees these since they have internal ref counts..?
