@@ -31,13 +31,13 @@ A functional Windows TCP socket class with optional SSL support
 ```
 ## Server
 ```cpp
-	TCPSocket* socket = TCPSocket::Create();
-	if (!socket->Bind("127.0.0.1", 8880))
+	TCPSocket* Socket = TCPSocket::Create();
+	if (!Socket->Bind("127.0.0.1", 8880))
 	{
 		...
 	}
 
-	SOCKET client = socket->Accept();
+	SOCKET client = Socket->Accept();
 	if (client == INVALID_SOCKET)
 	{
 		...
@@ -45,7 +45,7 @@ A functional Windows TCP socket class with optional SSL support
 
 	BYTE buffer[14];
 	memset(buffer, 0, sizeof(buffer));
-	if (socket->Recv(client, buffer, sizeof(buffer)) == 0)
+	if (Socket->Recv(client, buffer, sizeof(buffer)) == 0)
 	{
 		...
 	}
