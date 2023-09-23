@@ -1,5 +1,5 @@
 # TcpSocket
-A functional Windows TCP socket class with optional SSL support
+A Windows TCP socket class with optional SSL support
 
 ## Configuration
 ```cpp
